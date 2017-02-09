@@ -7,16 +7,6 @@ body {
     margin: 0 auto;
 }
 
-a {
-    color: rgb(64, 120, 192);
-    text-decoration: none;
-    outline: 0;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
 #content {
     max-width: 800px;
     margin-left: 300px;
@@ -29,14 +19,48 @@ nav {
     width: 300px;
     height: 100%;
     position: fixed;
-    padding-right: 1em;
-    padding-top: 1em;
+    padding: 1em 1em 1em 0;
     box-sizing: border-box;
+}
+
+a {
+    color: rgb(64, 120, 192);
+    text-decoration: none;
+    outline: 0;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+p {
+    text-align: justify;
 }
 
 #content > h1 {
     text-align: center;
     margin: 0;
+}
+
+blockquote {
+    margin: 0 0 0 30%;
+    font-style: italic;
+    font-size: 110%;
+}
+
+blockquote > p:last-child {
+    font-style: normal;
+    text-align: right;
+}
+
+header {
+    margin: 2em 0;
+    border-bottom: 1px solid grey;
+}
+
+header ul {
+    list-style: none;
+    padding: 0;
 }
 
 section h1 {
@@ -62,22 +86,35 @@ section h3::before {
     counter-increment: h3;
 }
 
-section p {
-    text-align: justify;
-}
 
 section pre {
     background-color: rgb(247, 247, 247);
-    padding: 1em;
+    padding: 0.8em;
     overflow: auto;
     word-wrap: normal;
     white-space: pre;
 }
 
+section pre > code {
+    background-color: inherit;
+}
+
 section code {
     font-family: "Source Code Pro", monospace;
-    background-color: rgb(247, 247, 247);
     font-size: 90%;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.04);
+    color: rgb(51, 51, 51);
+}
+
+section :not(pre) code::before {
+    letter-spacing: -0.4em;
+    content: "\00a0";
+}
+
+section :not(pre) code::after {
+    letter-spacing: -0.4em;
+    content: "\00a0";
 }
 
 nav ol ol ol {

@@ -9,9 +9,9 @@
 </header>
 
 
->From the Tower of Babel story:
->
->If now, while they are one people, all speaking the same language, they have
+From the Tower of Babel story:
+
+>"If now, while they are one people, all speaking the same language, they have
 >started to do this, nothing will later stop them from doing whatever they
 >propose to do."
 >
@@ -177,13 +177,13 @@ systems.  The only extra requirement for archival storage is that the newline
 character have a specific representation that is independent of its value for a
 particular computing system's text file usage.  The archival representation of
 a newline is the ASCII control character LF (line feed, decimal value 10,
-hexadecimal value 0x0a).
+hexadecimal value `0x0a`).
 
 Sadly, there are some accidents of history that survive to this day that have
 baroque representations for a newline: multicharacter sequences, end-of-line
 record markers, start-of-line byte counts, fixed length records, and so forth.
 It is well beyond the scope of the PGN project to reconcile all of these to the
-unified world of ANSI C and the those enjoying the bliss of a single '\n'
+unified world of ANSI C and the those enjoying the bliss of a single `\n`
 convention.  Some systems may just not be able to handle an archival PGN text
 file with native text editors.  In these cases, an indulgence of sorts is
 granted to use the local newline convention in non-archival PGN files for those
@@ -207,11 +207,12 @@ slower than a simple text scanner.
 
 A PGN game represented using export format is said to be in "reduced export
 format" if all of the following hold: 1) it has no commentary, 2) it has only
-the standard seven tag roster identification information ("STR", see below), 3)
-it has no recursive annotation variations ("RAV", see below), and 4) it has no
-numeric annotation glyphs ("NAG", see below).  Reduced export format is used
-for bulk storage of unannotated games.  It represents a minimum level of
-standard conformance for a PGN exporting application.
+the standard seven tag roster identification information ("STR", see
+[below](#str)), 3) it has no recursive annotation variations ("RAV", see
+[below](#rav)), and 4) it has no numeric annotation glyphs ("NAG", see
+[below](#nag)).  Reduced export format is used for bulk storage of unannotated
+games.  It represents a minimum level of standard conformance for a PGN
+exporting application.
 
 
 # Lexicographical issues
@@ -249,7 +250,7 @@ Because some PGN users' environments may not support presentation of non-ASCII
 characters, PGN game authors should refrain from using such characters in
 critical commentary or string values in game data that may be referenced in
 such environments.  PGN software authors should have their programs handle such
-environments by displaying a question mark ("?") for non-ASCII character codes.
+environments by displaying a question mark (`?`) for non-ASCII character codes.
 This is an important point because there are many computing systems that can
 display eight bit character data, but the display graphics may differ among
 machines and operating systems from different manufacturers.
@@ -291,9 +292,9 @@ that doesn't start from the usual initial position.
 
 Comment text may appear in PGN data.  There are two kinds of comments.  The
 first kind is the "rest of line" comment; this comment type starts with a
-semicolon character and continues to the end of the line.  The second kind
-starts with a left brace character and continues to the next right brace
-character.  Comments cannot appear inside any token.
+semicolon character `;` and continues to the end of the line.  The second kind
+starts with a left brace character `{` and continues to the next right brace
+character `}`.  Comments cannot appear inside any token.
 
 Brace comments do not nest; a left brace character appearing in a brace comment
 loses its special meaning and is ignored.  A semicolon appearing inside of a
@@ -306,7 +307,7 @@ inside of a semicolon comments lose their special meaning and are ignored.
 # Escape mechanism
 
 There is a special escape mechanism for PGN data.  This mechanism is triggered
-by a percent sign character ("%") appearing in the first column of a line; the
+by a percent sign character `%` appearing in the first column of a line; the
 data on the rest of the line is ignored by publicly available PGN scanning
 software.  This escape convention is intended for the private use of software
 developers and researchers to embed non-PGN commands and data in PGN streams.
@@ -323,15 +324,15 @@ adjacent tokens by white space characters.  (White space characters include
 space, newline, and tab characters.)  Some tokens are self delimiting and do
 not require white space characters.
 
-A string token is a sequence of zero or more printing characters delimited by a
-pair of quote characters (ASCII decimal value 34, hexadecimal value 0x22).  An
-empty string is represented by two adjacent quotes.  (Note: an apostrophe is
-not a quote.)  A quote inside a string is represented by the backslash
-immediately followed by a quote.  A backslash inside a string is represented by
-two adjacent backslashes.  Strings are commonly used as tag pair values (see
-below).  Non-printing characters like newline and tab are not permitted inside
-of strings.  A string token is terminated by its closing quote.  Currently, a
-string is limited to a maximum of 255 characters of data.
+A string token is a sequence of zero or more printing characters delimited by
+a pair of quote characters `"` (ASCII decimal value 34, hexadecimal value
+0x22).  An empty string is represented by two adjacent quotes.  (Note: an
+apostrophe is not a quote.)  A quote inside a string is represented by the
+backslash immediately followed by a quote.  A backslash inside a string is
+represented by two adjacent backslashes.  Strings are commonly used as tag pair
+values (see [below](#tag)).  Non-printing characters like newline and tab are
+not permitted inside of strings.  A string token is terminated by its closing
+quote.  Currently, a string is limited to a maximum of 255 characters of data.
 
 An integer token is a sequence of one or more decimal digit characters.  It is
 a special case of the more general "symbol" token class described below.
@@ -339,38 +340,38 @@ Integer tokens are used to help represent move number indications (see below).
 An integer token is terminated just prior to the first non-symbol character
 following the integer digit sequence.
 
-A period character (`.`) is a token by itself.  It is used for move number
-indications (see below).  It is self terminating.
+A period character `.` is a token by itself.  It is used for move number
+indications (see [below](#move-number)).  It is self terminating.
 
-An asterisk character (`*`) is a token by itself.  It is used as one of the
-possible game termination markers (see below); it indicates an incomplete game
-or a game with an unknown or otherwise unavailable result.  It is self
-terminating.
+An asterisk character `*` is a token by itself.  It is used as one of the
+possible game termination markers (see [below](#game-termination)); it
+indicates an incomplete game or a game with an unknown or otherwise unavailable
+result.  It is self terminating.
 
 The left and right bracket characters (`[` and `]`) are tokens.  They are used
-to delimit tag pairs (see below).  Both are self terminating.
+to delimit tag pairs (see [below](#tag)).  Both are self terminating.
 
 The left and right parenthesis characters (`(` and `)`) are tokens.  They are
-used to delimit Recursive Annotation Variations (see below).  Both are self
-terminating.
+used to delimit Recursive Annotation Variations (see [below](#rav)).  Both are
+self terminating.
 
 The left and right angle bracket characters (`<` and `>`) are tokens.  They are
 reserved for future expansion.  Both are self terminating.
 
-A Numeric Annotation Glyph (`NAG`, see below) is a token; it is composed of a
-dollar sign character ("$") immediately followed by one or more digit
-characters.  It is terminated just prior to the first non-digit character
+A Numeric Annotation Glyph (`NAG`, see [below](#nag)) is a token; it is
+composed of a dollar sign character `$` immediately followed by one or more
+digit characters.  It is terminated just prior to the first non-digit character
 following the digit sequence.
 
 A symbol token starts with a letter or digit character and is immediately
 followed by a sequence of zero or more symbol continuation characters.  These
-continuation characters are letter characters (`A-Za-z`), digit characters
-("0-9"), the underscore (`_`), the plus sign (`+`), the octothorpe sign (`#`),
-the equal sign (`=`), the colon (`:`),  and the hyphen (`-`).  Symbols are used
-for a variety of purposes.  All characters in a symbol are significant.  A
-symbol token is terminated just prior to the first non-symbol character
-following the symbol character sequence.  Currently, a symbol is limited to a
-maximum of 255 characters in length.
+continuation characters are letter characters `A-Za-z`, digit characters `0-9`,
+the underscore `_`, the plus sign `+`, the octothorpe sign `#`, the equal sign
+`=`, the colon `:`,  and the hyphen `-`.  Symbols are used for a variety of
+purposes.  All characters in a symbol are significant.  A symbol token is
+terminated just prior to the first non-symbol character following the symbol
+character sequence.  Currently, a symbol is limited to a maximum of 255
+characters in length.
 
 # Parsing games
 
@@ -383,18 +384,19 @@ that identifies the game by defining the values associated with a set of
 standard parameters.  The movetext section gives the usually enumerated and
 possibly annotated moves of the game along with the concluding game termination
 marker.  The chess moves themselves are represented using SAN (Standard
-Algebraic Notation), also described later in this document.
+Algebraic Notation), also described [later](#san) in this document.
 
 
-## Tag pair section
+## <a id="tag"></a> Tag pair section
 
 The tag pair section is composed of a series of zero or more tag pairs.
 
-A tag pair is composed of four consecutive tokens: a left bracket token, a
-symbol token, a string token, and a right bracket token.  The symbol token is
+A tag pair is composed of four consecutive tokens: a left bracket token,
+a symbol token, a string token, and a right bracket token.  The symbol token is
 the tag name and the string token is the tag value associated with the tag
-name.  (There is a standard set of tag names and semantics described below.)
-The same tag name should not appear more than once in a tag pair section.
+name.  (There is a standard set of tag names and semantics described
+[below](#str).) The same tag name should not appear more than once in a tag
+pair section.
 
 A further restriction on tag names is that they are composed exclusively of
 letters, digits, and the underscore character.  This is done to facilitate
@@ -419,21 +421,21 @@ follows the last tag pair.
 
 Some tag values may be composed of a sequence of items.  For example, a
 consultation game may have more than one player for a given side.  When this
-occurs, the single character ":" (colon) appears between adjacent items.
+occurs, the single character `:` (colon) appears between adjacent items.
 Because of this use as an internal separator in strings, the colon should not
 otherwise appear in a string.
 
 The tag pair format is designed for expansion; initially only strings are
 allowed as tag pair values.  Tag value formats associated with the STR (Seven
-Tag Roster, see below) will not change; they will always be string values.
-However, there are long term plans to allow general list structures as tag
-values for non-STR tag pairs.  Use of these expanded tag values will likely be
-restricted to special research programs.  In all events, the top level
+Tag Roster, see [below](#str)) will not change; they will always be string
+values.  However, there are long term plans to allow general list structures as
+tag values for non-STR tag pairs.  Use of these expanded tag values will likely
+be restricted to special research programs.  In all events, the top level
 structure of a tag pair remains the same: left bracket, tag name, tag value,
 and right bracket.
 
 
-### Seven Tag Roster
+### <a id="str"></a> Seven Tag Roster
 
 There is a set of tags defined for mandatory use for archival storage of PGN
 data.  This is the STR (Seven Tag Roster).  The interpretation of these tags is
@@ -457,7 +459,7 @@ The seven tag names of the STR are (in order):
 6) Black (the player of the black pieces)
 7) Result (the result of the game)
 
-A set of supplemental tag names is given later in this document.
+A set of supplemental tag names is given [later](#supp) in this document.
 
 For PGN export format, a single blank line appears after the last of the tag
 pairs to conclude the tag pair section.  This helps simple scanning programs to
@@ -467,7 +469,7 @@ movetext section.
 
 #### The Event tag
 
-The Event tag value should be reasonably descriptive.  Abbreviations are to be
+The `Event` tag value should be reasonably descriptive.  Abbreviations are to be
 avoided unless absolutely necessary.  A consistent event naming should be used
 to help facilitate database scanning.  If the name of the event is unknown, a
 single question mark should appear as the tag value.
@@ -482,14 +484,14 @@ Examples:
 
 #### The Site tag
 
-The Site tag value should include city and region names along with a standard
+The `Site` tag value should include city and region names along with a standard
 name for the country.  The use of the IOC (International Olympic Committee)
 three letter names is suggested for those countries where such codes are
 available.  If the site of the event is unknown, a single question mark should
 appear as the tag value.  A comma may be used to separate a city from a region.
-No comma is needed to separate a city or region from the IOC country code.  A
-later section of this document gives a list of three letter nation codes along
-with a few additions for "locations" not covered by the IOC.
+No comma is needed to separate a city or region from the IOC country code.
+A [later section](#ioc) of this document gives a list of three letter nation
+codes along with a few additions for "locations" not covered by the IOC.
 
 Examples:
 
@@ -500,7 +502,7 @@ Examples:
 
 #### The Date tag
 
-The Date tag value gives the starting date for the game.  (Note: this is not
+The `Date` tag value gives the starting date for the game.  (Note: this is not
 necessarily the same as the starting date for the event.)  The date is given
 with respect to the local time of the site given in the Event tag.  The Date
 tag value field always uses a standard ten character format: "YYYY.MM.DD".  The
@@ -519,7 +521,7 @@ Examples:
 
 #### The Round tag
 
-The Round tag value gives the playing round for the game.  In a match
+The `Round` tag value gives the playing round for the game.  In a match
 competition, this value is the number of the game played.  If the use of a
 round number is inappropriate, then the field should be a single hyphen
 character.  If the round is unknown, a single question mark should appear as
@@ -587,7 +589,7 @@ same as the game termination marker that concludes the associated movetext.  It
 is always one of four possible values: `1-0` (White wins), `0-1` (Black wins),
 `1/2-1/2` (drawn game), and `*` (game still in progress, game abandoned, or
 result otherwise unknown).  Note that the digit zero is used in both of the
-first two cases; not the letter "O".
+first two cases; not the letter `O`.
 
 All possible examples:
 
@@ -625,7 +627,7 @@ space.  (This may change in the case of commentary; this area is currently
 under development.)
 
 
-### Movetext move number indications
+### <a id="move-number"></a> Movetext move number indications
 
 A move number indication is composed of one or more adjacent digits (an integer
 token) followed by zero or more periods.  The integer portion of the indication
@@ -664,7 +666,7 @@ There are no other cases where move number indications appear in PGN export
 format.
 
 
-### Movetext SAN (Standard Algebraic Notation)
+### <a id="san"></a> Movetext SAN (Standard Algebraic Notation)
 
 SAN (Standard Algebraic Notation) is a representation standard for chess moves
 using the ASCII Latin alphabet.
@@ -696,8 +698,8 @@ white king at `e1`, black queen knight pawn at `b7`, and black king rook at `h8`
 #### Piece identification
 
 SAN identifies each piece by a single upper case letter.  The standard English
-values: pawn = "P", knight = "N", bishop = "B", rook = "R", queen = "Q", and
-king = "K".
+values: pawn = `P`, knight = `N`, bishop = `B`, rook = `R`, queen = `Q`, and
+king = `K`.
 
 The letter code for a pawn is not used for SAN moves in PGN export format
 movetext.  However, some PGN import software disambiguation code may allow for
@@ -707,9 +709,9 @@ are needed for use in some tag pair and annotation constructs.
 It is admittedly a bit chauvinistic to select English piece letters over those
 from other languages.  There is a slight justification in that English is a de
 facto universal second language among most chessplayers and program users.  It
-is probably the best that can be done for now.  A later section of this
-document gives alternative piece letters, but these should be used only for
-local presentation software and not for archival storage or for dynamic
+is probably the best that can be done for now.  A [later section](#alt-piece)
+of this document gives alternative piece letters, but these should be used only
+for local presentation software and not for archival storage or for dynamic
 interchange among programs.
 
 
@@ -717,22 +719,22 @@ interchange among programs.
 
 A basic SAN move is given by listing the moving piece letter (omitted for
 pawns) followed by the destination square.  Capture moves are denoted by the
-lower case letter "x" immediately prior to the destination square; pawn
+lower case letter `x` immediately prior to the destination square; pawn
 captures include the file letter of the originating square of the capturing
-pawn immediately prior to the "x" character.
+pawn immediately prior to the `x` character.
 
-SAN kingside castling is indicated by the sequence "O-O"; queenside castling is
-indicated by the sequence "O-O-O".  Note that the upper case letter "O" is
+SAN kingside castling is indicated by the sequence `O-O`; queenside castling is
+indicated by the sequence `O-O-O`.  Note that the upper case letter `O` is
 used, not the digit zero.  The use of a zero character is not only incompatible
 with traditional text practices, but it can also confuse parsing algorithms
 which also have to understand about move numbers and game termination markers.
-Also note that the use of the letter "O" is consistent with the practice of
+Also note that the use of the letter `O` is consistent with the practice of
 having all chess move symbols start with a letter; also, it follows the
 convention that all non-pwn move symbols start with an upper case letter.
 
 En passant captures do not have any special notation; they are formed as if the
 captured pawn were on the capturing pawn's destination square.  Pawn promotions
-are denoted by the equal sign "=" immediately following the destination square
+are denoted by the equal sign `=` immediately following the destination square
 with a promoted piece letter (indicating one of knight, bishop, rook, or queen)
 immediately following the equal sign.  As above, the piece letter is in upper
 case.
@@ -762,17 +764,17 @@ attacks of the same piece type to the same square.  An example of this would be
 a position with two white knights, one on square c3 and one on square g1 and a
 vacant square e2 with White to move.  Both knights attack square e2, and if
 both could legally move there, then a file disambiguation is needed; the
-(nonchecking) knight moves would be "Nce2" and "Nge2".  However, if the white
+(nonchecking) knight moves would be `Nce2` and `Nge2`.  However, if the white
 king were at square e1 and a black bishop were at square b4 with a vacant
 square d2 (thus an absolute pin of the white knight at square c3), then only
-one white knight (the one at square g1) could move to square e2: "Ne2".
+one white knight (the one at square g1) could move to square e2: `Ne2`.
 
 
 #### Check and checkmate indication characters
 
-If the move is a checking move, the plus sign "+" is appended as a suffix to
+If the move is a checking move, the plus sign `+` is appended as a suffix to
 the basic SAN move notation; if the move is a checkmating move, the octothorpe
-sign "#" is appended instead.
+sign `#` is appended instead.
 
 Neither the appearance nor the absence of either a check or checkmating
 indicator is used for disambiguation purposes.  This means that if two (or
@@ -783,9 +785,9 @@ status for the above may occur only in the case of a discovered check.)
 
 Neither the checking or checkmating indicators are considered annotation as
 they do not communicate subjective information.  Therefore, they are
-qualitatively different from move suffix annotations like "!" and "?".
+qualitatively different from move suffix annotations like `!` and `?`.
 Subjective move annotations are handled using Numeric Annotation Glyphs as
-described in a later section of this document.
+described in a [later section](#nag) of this document.
 
 There are no special markings used for double checks or discovered checks.
 
@@ -794,8 +796,8 @@ There are no special markings used for drawing moves.
 
 #### SAN move length
 
-SAN moves can be as short as two characters (e.g., "d4"), or as long as seven
-characters (e.g., "Qa6xb7#", "fxg1=Q+").  The average SAN move length seen in
+SAN moves can be as short as two characters (e.g., `d4`), or as long as seven
+characters (e.g., `Qa6xb7#`, `fxg1=Q+`).  The average SAN move length seen in
 realistic games is probably just fractionally longer than three characters.  If
 the SAN rules seem complicated, be assured that the earlier notation systems of
 LEN (Long English Notation) and EDN (English Descriptive Notation) are much
@@ -823,25 +825,26 @@ insertion, and checkmate indicator insertion.
 #### SAN move suffix annotations
 
 Import format PGN allows for the use of traditional suffix annotations for
-moves.  There are exactly six such annotations available: "!", "?", "!!", "!?",
-"?!", and "??".  At most one such suffix annotation may appear per move, and if
+moves.  There are exactly six such annotations available: `!`, `?`, `!!`, `!?`,
+`?!`, and `??`.  At most one such suffix annotation may appear per move, and if
 present, it is always the last part of the move symbol.
 
 When exported, a move suffix annotation is translated into the corresponding
-Numeric Annotation Glyph as described in a later section of this document.  For
-example, if the single move symbol "Qxa8?" appears in an import format PGN
-movetext, it would be replaced with the two adjacent symbols "Qxa8 $2".
+Numeric Annotation Glyph as described in a [later section](#nag) of this
+document.  For example, if the single move symbol `Qxa8?` appears in an import
+format PGN movetext, it would be replaced with the two adjacent symbols `Qxa8
+$2`.
 
 
 ### Movetext NAG (Numeric Annotation Glyph)
 
 An NAG (Numeric Annotation Glyph) is a movetext element that is used to
 indicate a simple annotation in a language independent manner.  An NAG is
-formed from a dollar sign ("$") with a non-negative decimal integer suffix.
+formed from a dollar sign `$` with a non-negative decimal integer suffix.
 The non-negative integer must be from zero to 255 in value.
 
 
-### Movetext RAV (Recursive Annotation Variation)
+### <a id="rav"></a> Movetext RAV (Recursive Annotation Variation)
 
 An RAV (Recursive Annotation Variation) is a sequence of movetext containing
 one or more moves enclosed in parentheses.  An RAV is used to represent an
@@ -853,20 +856,20 @@ prior to the RAV.  Because the RAV is a recursive construct, it may be nested.
 further development.***
 
 
-### Game Termination Markers
+### <a id="game-termination"></a> Game Termination Markers
 
 Each movetext section has exactly one game termination marker; the marker
 always occurs as the last element in the movetext.  The game termination marker
-is a symbol that is one of the following four values: "1-0" (White wins), "0-1"
-(Black wins), "1/2-1/2" (drawn game), and "*" (game in progress, result
+is a symbol that is one of the following four values: `1-0` (White wins), `0-1`
+(Black wins), `1/2-1/2` (drawn game), and `*` (game in progress, result
 unknown, or game abandoned).  Note that the digit zero is used in the above;
-not the upper case letter "O".  The game termination marker appearing in the
-movetext of a game must match the value of the game's Result tag pair.  (While
-the marker appears as a string in the Result tag, it appears as a symbol
-without quotes in the movetext.)
+not the upper case letter `O`.  The game termination marker appearing in the
+movetext of a game must match the value of the game's `Result` tag pair.
+(While the marker appears as a string in the `Result` tag, it appears as
+a symbol without quotes in the movetext.)
 
 
-# Supplemental tag names
+# <a id="supp"></a> Supplemental tag names
 
 The following tag names and their associated semantics are recommended for use
 for information not contained in the Seven Tag Roster.
@@ -877,22 +880,22 @@ for information not contained in the Seven Tag Roster.
 Note that if there is more than one player field in an instance of a player
 (White or Black) tag, then there will be corresponding multiple fields in any
 of the following tags.  For example, if the White tag has the three field value
-"Jones:Smith:Zacharias" (a consultation game), then the WhiteTitle tag could
-have a value of "IM:-:GM" if Jones was an International Master, Smith was
+`"Jones:Smith:Zacharias"` (a consultation game), then the WhiteTitle tag could
+have a value of `"IM:-:GM"` if Jones was an International Master, Smith was
 untitled, and Zacharias was a Grandmaster.
 
 
 ### Tags: WhiteTitle, BlackTitle
 
-These use string values such as "FM", "IM", and "GM"; these tags are used only
-for the standard abbreviations for FIDE titles.  A value of "-" is used for an
-untitled player.
+These use string values such as `"FM"`, `"IM"`, and `"GM"`; these tags are used
+only for the standard abbreviations for FIDE titles.  A value of `"-"` is used
+for an untitled player.
 
 
 ### Tags: WhiteElo, BlackElo
 
 These tags use integer values; these are used for FIDE Elo ratings.  A value of
-"-" is used for an unrated player.
+`"-"` is used for an unrated player.
 
 
 ### Tags: WhiteUSCF, BlackUSCF
@@ -905,14 +908,14 @@ agencies.
 ### Tags: WhiteNA, BlackNA
 
 These tags use string values; these are the e-mail or network addresses of the
-players.  A value of "-" is used for a player without an electronic address.
+players.  A value of `"-"` is used for a player without an electronic address.
 
 
 ### Tags: WhiteType, BlackType
 
 These tags use string values; these describe the player types.  The value
-"human" should be used for a person while the value "program" should be used
-for algorithmic (computer) players.
+`"human"` should be used for a person while the value `"program"` should be
+used for algorithmic (computer) players.
 
 
 ## Event related information
@@ -923,7 +926,7 @@ event.
 
 ### Tag: EventDate
 
-This uses a date value, similar to the Date tag field, that gives the starting
+This uses a date value, similar to the `Date`tag field, that gives the starting
 date of the Event.
 
 
@@ -935,13 +938,13 @@ This uses a string value giving the name of the sponsor of the event.
 ### Tag: Section
 
 This uses a string; this is used for the playing section of a tournament (e.g.,
-"Open" or "Reserve").
+`"Open"` or `"Reserve"`).
 
 
 ### Tag: Stage
 
 This uses a string; this is used for the stage of a multistage event (e.g.,
-"Preliminary" or "Semifinal").
+`"Preliminary"` or `"Semifinal"`).
 
 
 ### Tag: Board
@@ -960,21 +963,21 @@ tag values will vary according to the local language in use.
 
 This uses a string; this is used for the traditional opening name.  This will
 vary by locale.  This tag pair is associated with the use of the EPD opcode
-"v0" described in a later section of this document.
+`"v0"` described in a later section of this document.
 
 
 ### Tag: Variation
 
 This uses a string; this is used to further refine the Opening tag.  This will
 vary by locale.  This tag pair is associated with the use of the EPD opcode
-"v1" described in a later section of this document.
+`"v1"` described in a later section of this document.
 
 
 ### Tag: SubVariation
 
 This uses a string; this is used to further refine the Variation tag.  This
 will vary by locale.  This tag pair is associated with the use of the EPD
-opcode "v2" described in a later section of this document.
+opcode `"v2"` described in a later section of this document.
 
 
 ## Opening information (third party vendors)
@@ -987,18 +990,18 @@ by them.
 
 ### Tag: ECO
 
-This uses a string of either the form "XDD" or the form "XDD/DD" where the "X"
-is a letter from "A" to "E" and the "D" positions are digits; this is used for
-an opening designation from the five volume _Encyclopedia of Chess Openings_.
-This tag pair is associated with the use of the EPD opcode "eco" described in a
-later section of this document.
+This uses a string of either the form `"XDD"` or the form `"XDD/DD"` where the
+`"X"` is a letter from `A` to `E` and the `D` positions are digits; this is
+used for an opening designation from the five volume _Encyclopedia of Chess
+Openings_.  This tag pair is associated with the use of the EPD opcode `"eco"`
+described in a later section of this document.
 
 
 ### Tag: NIC
 
 This uses a string; this is used for an opening designation from the _New in
 Chess_ database.  This tag pair is associated with the use of the EPD opcode
-"nic" described in a later section of this document.
+`"nic"` described in a later section of this document.
 
 
 ## Time and date related information
@@ -1009,23 +1012,23 @@ information associated with a game.
 
 ### Tag: Time
 
-This uses a time-of-day value in the form "HH:MM:SS"; similar to the Date tag
-except that it denotes the local clock time (hours, minutes, and seconds) of
-the start of the game.  Note that colons, not periods, are used for field
-separators for the Time tag value.  The value is taken from the local time
+This uses a time-of-day value in the form `"HH:MM:SS"`; similar to the `Date`
+tag except that it denotes the local clock time (hours, minutes, and seconds)
+of the start of the game.  Note that colons, not periods, are used for field
+separators for the `Time` tag value.  The value is taken from the local time
 corresponding to the location given in the Site tag pair.
 
 
 ### Tag: UTCTime
 
-This tag is similar to the Time tag except that the time is given according to
+This tag is similar to the `Time` tag except that the time is given according to
 the Universal Coordinated Time standard.
 
 
 ### Tag:; UTCDate
 
-This tag is similar to the Date tag except that the date is given according to
-the Universal Coordinated Time standard.
+This tag is similar to the `Date` tag except that the date is given according
+to the Universal Coordinated Time standard.
 
 
 ## Time control
@@ -1037,49 +1040,49 @@ The follwing tag is used to help describe the time control used with the game.
 
 This uses a list of one or more time control fields.  Each field contains a
 descriptor for each time control period; if more than one descriptor is present
-then they are separated by the colon character (":").  The descriptors appear
+then they are separated by the colon character `:`.  The descriptors appear
 in the order in which they are used in the game.  The last field appearing is
 considered to be implicitly repeated for further control periods as needed.
 
-There are six kinds of TimeControl fields.
+There are six kinds of `TimeControl` fields.
 
-The first kind is a single question mark ("?") which means that the time
+The first kind is a single question mark (`"?"`) which means that the time
 control mode is unknown.  When used, it is usually the only descriptor present.
 
-The second kind is a single hyphen ("-") which means that there was no time
+The second kind is a single hyphen (`"-"`) which means that there was no time
 control mode in use.  When used, it is usually the only descriptor present.
 
 The third Time control field kind is formed as two positive integers separated
-by a solidus ("/") character.  The first integer is the number of moves in the
+by a solidus (`"/"`) character.  The first integer is the number of moves in the
 period and the second is the number of seconds in the period.  Thus, a time
-control period of 40 moves in 2 1/2 hours would be represented as "40/9000".
+control period of 40 moves in 2 1/2 hours would be represented as `"40/9000"`.
 
 The fourth TimeControl field kind is used for a "sudden death" control period.
-It should only be used for the last descriptor in a TimeControl tag value.  It
-is sometimes the only descriptor present.  The format consists of a single
+It should only be used for the last descriptor in a `TimeControl` tag value.
+It is sometimes the only descriptor present.  The format consists of a single
 integer that gives the number of seconds in the period.  Thus, a blitz game
-would be represented with a TimeControl tag value of "300".
+would be represented with a TimeControl tag value of `"300"`.
 
-The fifth TimeControl field kind is used for an "incremental" control period.
+The fifth TimeControl field kind is used for an `"incremental"` control period.
 It should only be used for the last descriptor in a TimeControl tag value and
 is usually the only descriptor in the value.  The format consists of two
-positive integers separated by a plus sign ("+") character.  The first integer
-gives the minimum number of seconds allocated for the period and the second
-integer gives the number of extra seconds added after each move is made.  So,
-an incremental time control of 90 minutes plus one extra minute per move would
-be given by "4500+60" in the TimeControl tag value.
+positive integers separated by a plus sign (`"+"`) character.  The first
+integer gives the minimum number of seconds allocated for the period and the
+second integer gives the number of extra seconds added after each move is made.
+So, an incremental time control of 90 minutes plus one extra minute per move
+would be given by `"4500+60"` in the TimeControl tag value.
 
 The sixth TimeControl field kind is used for a "sandclock" or "hourglass"
-control period.  It should only be used for the last descriptor in a
-TimeControl tag value and is usually the only descriptor in the value.  The
-format consists of an asterisk ("*") immediately followed by a positive
+control period.  It should only be used for the last descriptor in
+a TimeControl tag value and is usually the only descriptor in the value.  The
+format consists of an asterisk `*` immediately followed by a positive
 integer.  The integer gives the total number of seconds in the sandclock
 period.  The time control is implemented as if a sandclock were set at the
 start of the period with an equal amount of sand in each of the two chambers
 and the players invert the sandclock after each move with a time forfeit
 indicated by an empty upper chamber.  Electronic implementation of a physical
 sandclock may be used.  An example sandclock specification for a common three
-minute egg timer sandclock would have a tag value of "*180".
+minute egg timer sandclock would have a tag value of `"*180"`.
 
 Additional TimeControl field kinds will be defined as necessary.
 
@@ -1092,19 +1095,19 @@ start from the usual initial array.
 
 ### Tag: SetUp
 
-This tag takes an integer that denotes the "set-up" status of the game.  A
-value of "0" indicates that the game has started from the usual initial array.
-A value of "1" indicates that the game started from a set-up position; this
-position is given in the "FEN" tag pair.  This tag must appear for a game
-starting with a set-up position.  If it appears with a tag value of "1", a FEN
-tag pair must also appear.
+This tag takes an integer that denotes the "set-up" status of the game.
+A value of `"0"` indicates that the game has started from the usual initial
+array.  A value of `"1"` indicates that the game started from a set-up
+position; this position is given in the `FEN` tag pair.  This tag must appear
+for a game starting with a set-up position.  If it appears with a tag value of
+`"1"`, a FEN tag pair must also appear.
 
 
 ### Tag: FEN
 
 This tag uses a string that gives the Forsyth-Edwards Notation for the starting
-position used in the game.  FEN is described in a later section of this
-document.  If a SetUp tag appears with a tag value of "1", the FEN tag pair is
+position used in the game.  FEN is described in a [later section](#fen) of this
+document.  If a SetUp tag appears with a tag value of `1`, the FEN tag pair is
 also required.
 
 
@@ -1158,7 +1161,7 @@ This tag takes a single integer that gives the number of ply (moves) in the
 game.
 
 
-# Numeric Annotation Glyphs
+# <a id="nag"></a> Numeric Annotation Glyphs
 
 NAG zero is used for a null annotation; it is provided for the convenience of
 software designers as a placeholder value and should probably not be used in
@@ -1760,7 +1763,7 @@ The European site ftp.math.uni-hamburg.de is also reported to carry a regularly
 updated copy of the repository.
 
 
-# International Olympic Committee country codes
+# <a id="ioc"></a> International Olympic Committee country codes
 
 International Olympic Committee country codes are employed for Site nation
 information because of their traditional use with the reporting of
@@ -1930,7 +1933,7 @@ standards for other chess related purposes.  Two important standards are FEN
 and EPD, both described in this section.
 
 
-## FEN
+## <a id="fen"></a> FEN
 
 FEN is "Forsyth-Edwards Notation"; it is a standard for describing chess
 positions using the ASCII character set.
@@ -1940,7 +1943,7 @@ fields.  The first four fields of the FEN specification are the same as the
 first four fields of the EPD specification.
 
 A text file composed exclusively of FEN data records should have a file name
-with the suffix ".fen".
+with the suffix `.fen`.
 
 
 ### History
@@ -2577,7 +2580,7 @@ operand is present, the value of the corresponding variation name string
 register is set equal to the string operand.
 
 
-# Alternative chesspiece identifier letters
+# <a id="alt-piece"></a> Alternative chesspiece identifier letters
 
 English language piece names are used to define the letter set for identifying
 chesspieces in PGN movetext.  However, authors of programs which are used only
